@@ -21,16 +21,16 @@ jobs:
      # Step 0: Set up environment variables
       #  Checkout the repository using Node.js 20
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      # Step 1: Set up Node.js 20 (if needed by other steps)
-      - name: Set up Node.js 20
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-          cache: 'npm'
+      # # Step 1: Set up Node.js 20 (if needed by other steps)
+      # - name: Set up Node.js 20
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: '20'
+      #     cache: 'npm'
      
 
           # Step 2: Install Foundry
