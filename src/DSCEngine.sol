@@ -79,6 +79,8 @@ contract DSCEngine is ReentrancyGuard {
     /////////////////////
     mapping(address token => address priceFeed) private s_priceFeeds; //token to pricefeed address
     mapping(address user => mapping(address token => uint256 amount)) private s_collateralDeposited;
+    mapping(address user => uint256 amountMinted) private s_DSCMinted;
+
     DecentralizedStableCoin private immutable i_dsc; // the decentralized stable coin
 
     //////////////////
@@ -149,11 +151,54 @@ contract DSCEngine is ReentrancyGuard {
 
     function redeemCollateral() external {}
 
-    function mintDsc() external {}
+    /**
+     * @notice follow the CEI
+     * @param amountToMint The amount of decentralized stablecoin to mint
+     * @notice they must have more collateral value than the minimum threshold
+     */
+    function mintDsc(uint256 amountToMint) external nonReentrant {
+        s_DSCMinted[msg.sender] += amountToMint;
+        // If minted more than available collateral, revert
+        _revertIfHealthFactorIsBroken(msg.sender);
+    }
 
     function burnDsc() external {}
 
     function liquidate() external {}
 
     function getHealthfactor() external view {}
+
+    //////////////////////////////////
+    // Private & Internal Functions //
+    //////////////////////////////////
+
+    /**
+     * Returns how close to liquidation a user is
+     * If a usergoes below 1, they can be liquidated
+     */
+    function _getAccountInformation(address user)
+        private
+        view
+        returns (uint256 totalDscMinted, uint256 collateralValueInUsd)
+    {
+        totalDscMinted = s_DSCMinted[user];
+        collateralValueInUsd = getAccountCollateralValue(user);
+    }
+
+    function _healthFactor(address user) private view returns (uint256) {
+        // get their total DSC minted
+        // get their total collateral VALUE
+        (uint256 totalDscMinted, uint256 collateralValueInUsd) = _getAccountInformation(user);
+    }
+
+    function _revertIfHealthFactorIsBroken(address user) internal view {
+        //Check health factor, do they have enough collateral?
+        //Revert if they don't
+    }
+
+    //////////////////////////////////
+    // Public & External View Functions //
+    //////////////////////////////////
+
+    function getAccountCollateralValue(address user) public view returns (uint256) {}
 }
