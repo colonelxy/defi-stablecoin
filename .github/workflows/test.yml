@@ -17,35 +17,79 @@ jobs:
     name: Decentralized Stable Coin (DSC)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+
+     # Step 0: Set up environment variables
+      #  Checkout the repository using Node.js 20
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
           submodules: recursive
 
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
+      # Step 1: Set up Node.js 20 (if needed by other steps)
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v3
         with:
-          version: nightly
+          node-version: '20'
+          cache: 'npm'
+     
 
+          # Step 2: Install Foundry
+
+      # - name: Install Foundry
+      #   uses: foundry-rs/foundry-toolchain@v1
+      #   with:
+      #     version: nightly
+
+          
+      - name: Install Foundry
+        run: |
+          curl -L https://foundry.paradigm.xyz | bash
+          foundryup
+
+    # Step 3: Cache foundry components (for faster builds)
+      - name: Cache Foundry
+        uses: actions/cache@v4
+        with:
+          path: ~/.foundry
+          key: ${{ runner.os }}-foundry-${{ hashFiles('foundry.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-foundry
+
+      # Step 4: Install dependencies
+      - name: Install dependencies
+        run: forge install
+
+          # Step 5: Run Forge fmt
       - name: Run Forge fmt
         run: |
             forge fmt --check
         id: fmt
-          
-      - name: Run Forge build
+
+      # Step 6: Compile the Solidity contracts
+      - name: Compile contracts
         run: |
           forge --version
           forge build --sizes
         id: build
+
+      # Step 7: Run tests
+      - name: Run tests
+        run: forge test --gas-report
+
+      # Step 8 : Run Forge Test
 
       - name: Run Forge tests
         run: |
           forge test -vvvv
         id: test
 
+        # Step 9 : Run Forge coverage
       - name: Run Forge coverage
         run: |
           forge coverage
         id: coverage
+
+        # Step 10 Run Slither and check for security issues
 
       - name: Run Slither
         uses: crytic/slither-action@v0.3.0
