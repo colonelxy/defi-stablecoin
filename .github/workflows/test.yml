@@ -1,9 +1,10 @@
-name: CI
+name: Foundry CI
 
 on:
   push:
+    branches: [ main ]
   pull_request:
-  workflow_dispatch:
+    branches: [ main ]
 
 env:
   FOUNDRY_PROFILE: ci
@@ -13,10 +14,10 @@ jobs:
     strategy:
       fail-fast: true
 
-    name: Foundry project
+    name: Decentralized Stable Coin (DSC)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
 
@@ -25,21 +26,35 @@ jobs:
         with:
           version: nightly
 
-      - name: Show Forge version
-        run: |
-          forge --version
-
       - name: Run Forge fmt
         run: |
-          forge fmt --check
+            forge fmt --check
         id: fmt
-
+          
       - name: Run Forge build
         run: |
+          forge --version
           forge build --sizes
         id: build
 
       - name: Run Forge tests
         run: |
-          forge test -vvv
+          forge test -vvvv
         id: test
+
+      - name: Run Forge coverage
+        run: |
+          forge coverage
+        id: coverage
+
+      - name: Run Slither
+        uses: crytic/slither-action@v0.3.0
+        id: slither
+        continue-on-error: true
+        
+        
+        
+        
+        
+        
+    
