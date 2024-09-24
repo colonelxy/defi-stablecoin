@@ -44,6 +44,7 @@ jobs:
       - name: Install Foundry
         run: |
           curl -L https://foundry.paradigm.xyz | bash
+          source /home/runner/.bashrc
           foundryup
 
     # Step 3: Cache foundry components (for faster builds)
