@@ -7,6 +7,8 @@ import {DecentralizedStableCoin} from "../../src/DecentralizedStableCoin.sol";
 import {DSCEngine} from "../../src/DSCEngine.sol";
 import {HelperConfig} from "../../script/HelperConfig.s.sol";
 import {ERC20Mock} from "@openzeppelin/contracts/mocks/token/ERC20Mock.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 contract DSCEngineTest is Test {
@@ -63,7 +65,7 @@ contract DSCEngineTest is Test {
 
     function testGetTokenAmountFromUsd() public {
         uint256 usdAmount = 100 ether;
-        // $2000 / ETH $100
+        // $2000 / ETH, $100
         uint256 expectedWeth = 0.05 ether;
         uint256 actualWeth = engine.getTokenAmountFromUsd(weth, usdAmount);
         assertEq(expectedWeth, actualWeth);
