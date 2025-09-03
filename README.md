@@ -1,4 +1,4 @@
-## Video 25:57:49
+## Video 26:27:49
 # StableCoin
 
 https://github.com/Cyfrin/foundry-defi-stablecoin-cu/tree/main/src
