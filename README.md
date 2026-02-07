@@ -1,5 +1,9 @@
 ## Video 26:27:49
+Youtube: https://www.youtube.com/watch?v=-1GB6m39-rM
+- [StableCoin](#stablecoin)
+
 # StableCoin
+
 
 https://github.com/Cyfrin/foundry-defi-stablecoin-cu/tree/main/src
 
